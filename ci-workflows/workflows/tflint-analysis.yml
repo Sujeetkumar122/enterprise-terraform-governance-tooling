@@ -1,0 +1,32 @@
+name: "Terraform Linting & Security Verification"
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_call:
+
+jobs:
+  tflint:
+    name: "TFLint Code Quality Check"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: "latest"
+
+      - name: Show TFLint Version
+        run: tflint --version
+
+      - name: Initialize TFLint Rulesets
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint -f compact
+
